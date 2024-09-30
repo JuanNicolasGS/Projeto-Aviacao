@@ -5,7 +5,8 @@
 para a escolha do que ele pode fazer.
 Exemplo: menu com os possíveis relatórios.</p>
 
-        while True:
+        def Menu():
+            linhas()
             print("\nMenu:")
             print("1. Marcar assento")
             print("2. Desmarcar assento")
@@ -13,6 +14,10 @@ Exemplo: menu com os possíveis relatórios.</p>
             print("4. Relatório")
             print("5. Mostrar mapa de assentos")
             print("6. Sair")
+            linhas()
+        while True:
+            Menu()
+            
             opcao = input("Escolha uma opção: ")
             if opcao == '1':
                 fileira = int(input("Digite a fileira (1 a 30): ")) - 1
@@ -37,7 +42,7 @@ Exemplo: menu com os possíveis relatórios.</p>
                 break
             else:
                 print("Opção inválida. Tente novamente.")
-                
+
 
 <p>Inicialmente vocês devem oferecer uma forma
 de começar a marcar assentos, vários de uma
