@@ -3,6 +3,9 @@ numColunas = 6
 precoPrimeiraClasse = 100.0
 precoClasseNormal = 80.0
 
+def linhas():
+    print("-"*60)
+
 def inicializarAssentos():
     assentos = []
     for x in range(numFileiras):
@@ -24,6 +27,7 @@ def marcarAssento(assentos, fileira, coluna, nome):
     if verificarDisponibilidade(assentos, fileira, coluna):
         assentos[fileira][coluna] = nome
         print(f"Assento {chr(65 + coluna)}{fileira+1} reservado para {nome}.")
+        linhas()
     else:
         print(f"Assento {chr(65 + coluna)}{fileira+1} já está ocupado.")
 def desmarcarAssento(assentos, fileira, coluna):
@@ -78,7 +82,7 @@ def relatorioAssentos(assentos):
     print(f"Total pago pela primeira classe (R$): {valorPrimeiraClasse}")
     print(f"Total pago pela classe normal (R$): {valorClasseNormal}")
 
-
+linhas()
 assentos = inicializarAssentos()
 print("Bem-vindo ao sistema de reservas de assentos da aeronave.")
 print("Você pode começar a marcar assentos.")
@@ -90,7 +94,9 @@ while True:
     nome = input("Digite o nome do passageiro: ")
     marcarAssento(assentos, fileira, ord(coluna) - 65, nome)
 print("\nVocê parou de marcar assentos. O menu completo será exibido agora.")
-while True:
+
+def Menu():
+    linhas()
     print("\nMenu:")
     print("1. Marcar assento")
     print("2. Desmarcar assento")
@@ -98,6 +104,10 @@ while True:
     print("4. Relatório")
     print("5. Mostrar mapa de assentos")
     print("6. Sair")
+    linhas()
+while True:
+    Menu()
+    
     opcao = input("Escolha uma opção: ")
     if opcao == '1':
         fileira = int(input("Digite a fileira (1 a 30): ")) - 1
