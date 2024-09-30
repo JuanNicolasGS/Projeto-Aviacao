@@ -37,6 +37,7 @@ Exemplo: menu com os possíveis relatórios.</p>
                 break
             else:
                 print("Opção inválida. Tente novamente.")
+                
 
 <p>Inicialmente vocês devem oferecer uma forma
 de começar a marcar assentos, vários de uma
