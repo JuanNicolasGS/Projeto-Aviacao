@@ -2,9 +2,10 @@ numFileiras = 30
 numColunas = 6
 precoPrimeiraClasse = 100.0
 precoClasseNormal = 80.0
+colunasValidas = ['A', 'B', 'C', 'D', 'E', 'F']
 
 def linhas():
-    print("-"*60)
+    print("-"*200)
 
 def inicializarAssentos():
     assentos = []
@@ -14,38 +15,55 @@ def inicializarAssentos():
             fileira.append('-')
         assentos.append(fileira)
     return assentos
+
 def mostrarAssentos(assentos):
     print("Mapa de Assentos (colunas A a F):")
     for i in range(len(assentos)):
         fileira = f"{i+1:02d}"
         print(f"Fileira {fileira}: {assentos[i]}")
+
 def verificarDisponibilidade(assentos, fileira, coluna):
     if assentos[fileira][coluna] == '-':
         return True
     return False
+
+def validarAssento(fileira, coluna):
+    if 0 <= fileira < numFileiras and coluna in colunasValidas:
+        return True
+    return False
+
 def marcarAssento(assentos, fileira, coluna, nome):
-    if verificarDisponibilidade(assentos, fileira, coluna):
-        assentos[fileira][coluna] = nome
-        print(f"Assento {chr(65 + coluna)}{fileira+1} reservado para {nome}.")
+    colunaIndex = colunasValidas.index(coluna)
+    if verificarDisponibilidade(assentos, fileira, colunaIndex):
+        assentos[fileira][colunaIndex] = nome
+        print(f"Assento {coluna}{fileira+1} reservado para {nome}.")
         linhas()
     else:
-        print(f"Assento {chr(65 + coluna)}{fileira+1} já está ocupado.")
+        print(f"Assento {coluna}{fileira+1} já está ocupado.")
+
 def desmarcarAssento(assentos, fileira, coluna):
-    if not verificarDisponibilidade(assentos, fileira, coluna):
-        print(f"Assento {chr(65 + coluna)}{fileira+1} desmarcado.")
-        assentos[fileira][coluna] = '-'
+    colunaIndex = colunasValidas.index(coluna)
+    if not verificarDisponibilidade(assentos, fileira, colunaIndex):
+        print(f"Assento {coluna}{fileira+1} desmarcado.")
+        assentos[fileira][colunaIndex] = '-'
     else:
-        print(f"O assento {chr(65 + coluna)}{fileira+1} já está vazio.")
+        print(f"O assento {coluna}{fileira+1} já está vazio.")
+
 def remarcarAssento(assentos, assentoAtual, fileiraNova, colunaNova):
-    colunaAtual = ord(assentoAtual[0].upper()) - 65
+    colunaAtual = assentoAtual[0].upper()
     fileiraAtual = int(assentoAtual[1:]) - 1
-    if not verificarDisponibilidade(assentos, fileiraAtual, colunaAtual):
-        nome = assentos[fileiraAtual][colunaAtual]
-        print(f"Assento {chr(65 + colunaAtual)}{fileiraAtual + 1} será liberado.")
-        desmarcarAssento(assentos, fileiraAtual, colunaAtual)
-        marcarAssento(assentos, fileiraNova, colunaNova, nome)
+    if validarAssento(fileiraAtual, colunaAtual):
+        colunaIndexAtual = colunasValidas.index(colunaAtual)
+        if not verificarDisponibilidade(assentos, fileiraAtual, colunaIndexAtual):
+            nome = assentos[fileiraAtual][colunaIndexAtual]
+            print(f"Assento {colunaAtual}{fileiraAtual + 1} será liberado.")
+            desmarcarAssento(assentos, fileiraAtual, colunaAtual)
+            marcarAssento(assentos, fileiraNova, colunaNova, nome)
+        else:
+            print(f"O assento {assentoAtual} já está vazio.")
     else:
-        print(f"O assento {assentoAtual} já está vazio.")
+        print(f"Assento {assentoAtual} inválido.")
+
 def relatorioAssentos(assentos):
     ocupados = 0
     primeiraClasse = 0
@@ -59,7 +77,7 @@ def relatorioAssentos(assentos):
         while j < numColunas:
             if assentos[i][j] != '-':
                 ocupados += 1
-                assentoStr = f"{chr(65+j)}{i+1}"
+                assentoStr = f"{colunasValidas[j]}{i+1}"
                 ocupadosLista.append(assentoStr)
                 if i < 6:
                     primeiraClasse += 1
@@ -91,8 +109,11 @@ while True:
     if fileira == -1:
         break
     coluna = input("Digite a coluna (A a F): ").upper()
-    nome = input("Digite o nome do passageiro: ")
-    marcarAssento(assentos, fileira, ord(coluna) - 65, nome)
+    if validarAssento(fileira, coluna):
+        nome = input("Digite o nome do passageiro: ")
+        marcarAssento(assentos, fileira, coluna, nome)
+    else:
+        print("Assento inválido. Por favor, insira uma fileira entre 1 e 30 e uma coluna entre A e F.")
 print("\nVocê parou de marcar assentos. O menu completo será exibido agora.")
 
 def Menu():
@@ -105,24 +126,34 @@ def Menu():
     print("5. Mostrar mapa de assentos")
     print("6. Sair")
     linhas()
+
 while True:
     Menu()
-    
+
     opcao = input("Escolha uma opção: ")
     if opcao == '1':
         fileira = int(input("Digite a fileira (1 a 30): ")) - 1
         coluna = input("Digite a coluna (A a F): ").upper()
-        nome = input("Digite o nome do passageiro: ")
-        marcarAssento(assentos, fileira, ord(coluna) - 65, nome)
+        if validarAssento(fileira, coluna):
+            nome = input("Digite o nome do passageiro: ")
+            marcarAssento(assentos, fileira, coluna, nome)
+        else:
+            print("Assento inválido.")
     elif opcao == '2':
         fileira = int(input("Digite a fileira (1 a 30): ")) - 1
         coluna = input("Digite a coluna (A a F): ").upper()
-        desmarcarAssento(assentos, fileira, ord(coluna) - 65)
+        if validarAssento(fileira, coluna):
+            desmarcarAssento(assentos, fileira, coluna)
+        else:
+            print("Assento inválido.")
     elif opcao == '3':
         assentoAtual = input("Digite o assento atual (exemplo: A15): ").replace(' ', '')
         fileiraNova = int(input("Digite a nova fileira (1 a 30): ")) - 1
         colunaNova = input("Digite a nova coluna (A a F): ").upper()
-        remarcarAssento(assentos, assentoAtual, fileiraNova, ord(colunaNova) - 65)
+        if validarAssento(fileiraNova, colunaNova):
+            remarcarAssento(assentos, assentoAtual, fileiraNova, colunaNova)
+        else:
+            print("Novo assento inválido.")
     elif opcao == '4':
         relatorioAssentos(assentos)
     elif opcao == '5':
@@ -131,4 +162,4 @@ while True:
         print("Encerrando sistema...")
         break
     else:
-        print("Opção inválida. Tente novamente.")
+        print("Opção inválida. Tente novamente.")
